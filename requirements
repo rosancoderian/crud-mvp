@@ -1,0 +1,41 @@
+Models:
+instruction
+- title (single line text)
+- description (multi line text)
+- duration (number)
+- preview_file (single file, only image)
+- assets (many to many relation)
+
+
+step
+- type (list: image, video, pdf, text)
+- title (single line text)
+- description (richtext)
+- step_nr (number)
+- attached_file (single file, only image, video, pdf allowed)
+
+
+asset
+- name
+- asset_file (multiple files, all allowed)
+
+Relations:
+Instructions can have multiple steps, each step belongs to only one instruction
+Instructions can have multiple assets, each asset can belong to multiple instructions
+Each model has two users assigned by two fields: created_by, updated_by
+
+
+Functionality:
+Save user on create/update a model (into created_by, updated_by)
+Save timestamp on create/update a model (into created_at, updated_at)
+
+
+Bonus 1:
+Only show the step attached_file field, if the step type is not text
+
+Bonus 2:
+Use a soft delete behavior. Add deleted_by, deleted_at to every model which is set on deletion. Listview only lists the entries without a value on deleted_at
+
+Bonus 3:
+Add a filter/search for one or multiple columns of your choice
+Add a sort (asc/desc) option for one or multiple columns of your choice
