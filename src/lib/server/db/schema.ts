@@ -25,7 +25,7 @@ export const instruction = sqliteTable('instruction', {
 	updatedAt: integer('updated_at', { mode: 'timestamp' }),
 	deletedAt: integer('deleted_at', { mode: 'timestamp' }),
 	createdBy: text('created_by').references(() => user.id),
-	updatedBy: text('updated_by').references(() => user.id),
+	updatedBy: text('updated_by').references(() => user.id)
 });
 
 export const step = sqliteTable('step', {
@@ -42,7 +42,7 @@ export const step = sqliteTable('step', {
 	updatedAt: integer('updated_at', { mode: 'timestamp' }),
 	deletedAt: integer('deleted_at', { mode: 'timestamp' }),
 	createdBy: text('created_by').references(() => user.id),
-	updatedBy: text('updated_by').references(() => user.id),
+	updatedBy: text('updated_by').references(() => user.id)
 });
 
 export const asset = sqliteTable('asset', {
@@ -53,9 +53,11 @@ export const asset = sqliteTable('asset', {
 	updatedAt: integer('updated_at', { mode: 'timestamp' }),
 	deletedAt: integer('deleted_at', { mode: 'timestamp' }),
 	createdBy: text('created_by').references(() => user.id),
-	updatedBy: text('updated_by').references(() => user.id),
+	updatedBy: text('updated_by').references(() => user.id)
 });
 
 export type Session = typeof session.$inferSelect;
-
 export type User = typeof user.$inferSelect;
+export type Instruction = typeof instruction.$inferSelect;
+export type Step = typeof step.$inferSelect;
+export type Asset = typeof asset.$inferSelect;
