@@ -15,7 +15,7 @@
 	let formEditAsset: SvelteComponent;
 </script>
 
-<div class="container mx-auto py-20">
+<div class="mx-auto w-full px-6 py-8">
 	<div class="pb-4">
 		<Sheet.Root>
 			<Sheet.Trigger class={buttonVariants()}>
