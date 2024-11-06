@@ -58,6 +58,7 @@
 		"@oslojs/crypto": "^1.0.1",
 		"@oslojs/encoding": "^1.1.0",
 		"better-sqlite3": "^11.1.2",
+		"dayjs": "^1.11.13",
 		"drizzle-orm": "^0.33.0",
 		"fs-extra": "^11.2.0",
 		"qs": "^6.13.0"
