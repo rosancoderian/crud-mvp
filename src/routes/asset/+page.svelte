@@ -4,19 +4,21 @@
 	import * as Table from '$lib/components/ui/table';
 	import * as Sheet from '$lib/components/ui/sheet';
 	import { Plus, Pencil } from 'lucide-svelte';
-	import AddAssetForm from '$lib/components/forms/add-asset-form/add-asset-form.svelte';
+	import { AddAssetForm } from '$lib/components/forms/add-asset-form';
+	import { EditAssetForm } from '$lib/components/forms/edit-asset-form';
 	import dayjs from 'dayjs';
 
 	const { data } = $props();
 
 	let formAddAsset: SvelteComponent;
+	let formEditAsset: SvelteComponent;
 </script>
 
 <div class="container mx-auto py-20">
 	<div class="pb-4">
 		<Sheet.Root>
 			<Sheet.Trigger class={buttonVariants()}>
-				<Plus onclick={() => formAddAsset.reset()} /> ADD ASSET
+				<Plus /> ADD ASSET
 			</Sheet.Trigger>
 			<Sheet.Content class="sm:max-w-[560px]" side="right">
 				<Sheet.Header>
@@ -59,16 +61,18 @@
 					<Table.Cell>
 						<Sheet.Root>
 							<Sheet.Trigger class={buttonVariants({ variant: 'secondary' })}>
-								<Pencil onclick={() => {}} />
+								<Pencil />
 							</Sheet.Trigger>
 							<Sheet.Content class="sm:max-w-[560px]" side="right">
 								<Sheet.Header>
 									<Sheet.Title>Edit Asset</Sheet.Title>
 								</Sheet.Header>
-								<div class="grid gap-4 py-4"></div>
+								<div class="grid gap-4 py-4">
+									<EditAssetForm data={data.formEditAsset} {asset} />
+								</div>
 								<Sheet.Footer>
 									<Sheet.Close class={buttonVariants({ variant: 'ghost' })}>Cancel</Sheet.Close>
-									<Button onclick={() => {}}>Save</Button>
+									<Button onclick={() => formEditAsset.sumit()}>Save</Button>
 								</Sheet.Footer>
 							</Sheet.Content>
 						</Sheet.Root>

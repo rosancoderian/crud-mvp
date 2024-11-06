@@ -1,12 +1,13 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { zAddAssetForm } from '$lib/components/forms/add-asset-form/index.js';
+import * as fse from 'fs-extra';
+import * as fs from 'fs';
 import { db } from '$lib/server/db';
 import { superValidate, withFiles } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import * as table from '$lib/server/db/schema';
 import { guid } from '$lib/utils';
-import * as fse from 'fs-extra';
-import * as fs from 'fs';
+import { zAddAssetForm } from '$lib/components/forms/add-asset-form';
+import { zEditAssetForm } from '$lib/components/forms/edit-asset-form';
 
 export const load = async ({ locals }) => {
 	if (!locals.user) return redirect(302, '/login');
@@ -16,9 +17,12 @@ export const load = async ({ locals }) => {
 	const formAddAsset = await superValidate(zod(zAddAssetForm));
 	formAddAsset.data.assetFile = [];
 
+	const formEditAsset = await superValidate(zod(zEditAssetForm));
+
 	return {
 		assets,
-		formAddAsset
+		formAddAsset,
+		formEditAsset
 	};
 };
 

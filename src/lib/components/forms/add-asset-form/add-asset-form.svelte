@@ -10,10 +10,9 @@
 	type Props = {
 		data: SuperValidated<Infer<typeof zAddAssetForm>>;
 		action?: string;
-		debug?: boolean;
 	};
 
-	const { data, action = '?/addAsset', debug = false }: Props = $props();
+	const { data, action = '?/addAsset' }: Props = $props();
 
 	const form = superForm(data, {
 		validators: zodClient(zAddAssetForm),
