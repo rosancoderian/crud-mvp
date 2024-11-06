@@ -108,5 +108,22 @@ export const actions = {
 			.where(eq(table.asset.id, id));
 
 		return withFiles({ form });
+	},
+	deleteAsset: async ({ request, locals, url }) => {
+		const id = url.searchParams.get('id') as string;
+
+		if (!locals.user) return fail(403);
+		if (!id) return fail(404);
+
+		const asset = await db.query.asset.findFirst({
+			where: eq(table.asset.id, id)
+		});
+
+		if (!asset) return fail(404);
+
+		await db.delete(table.asset).where(eq(table.asset.id, id));
+		await fse.remove(`static/assets/${id}`);
+
+		return {};
 	}
 };

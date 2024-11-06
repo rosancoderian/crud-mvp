@@ -3,10 +3,11 @@
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Table from '$lib/components/ui/table';
 	import * as Sheet from '$lib/components/ui/sheet';
-	import { Plus, Pencil } from 'lucide-svelte';
+	import { Plus, Pencil, Trash } from 'lucide-svelte';
 	import { AddAssetForm } from '$lib/components/forms/add-asset-form';
 	import { EditAssetForm } from '$lib/components/forms/edit-asset-form';
 	import dayjs from 'dayjs';
+	import { enhance } from '$app/forms';
 
 	const { data } = $props();
 
@@ -54,18 +55,21 @@
 					? dayjs(asset.updatedAt).format('YYYY-MM-DD HH:mm:ss')
 					: ''}
 				<Table.Row>
-					<Table.Cell class="line-clamp-1 w-60">{asset.id}</Table.Cell>
-					<Table.Cell>{asset.name}</Table.Cell>
-					<Table.Cell class="w-44">{createdAt}</Table.Cell>
-					<Table.Cell class="w-44">{updatedAt}</Table.Cell>
-					<Table.Cell>
+					<Table.Cell class="line-clamp-1">{asset.id}</Table.Cell>
+					<Table.Cell class="">{asset.name}</Table.Cell>
+					<Table.Cell class="">{createdAt}</Table.Cell>
+					<Table.Cell class="">{updatedAt}</Table.Cell>
+					<Table.Cell class="flex justify-end gap-2">
 						<Sheet.Root>
 							<Sheet.Trigger class={buttonVariants({ variant: 'secondary' })}>
 								<Pencil />
 							</Sheet.Trigger>
 							<Sheet.Content class="sm:max-w-[560px]" side="right">
 								<Sheet.Header>
-									<Sheet.Title>Edit Asset</Sheet.Title>
+									<Sheet.Title>
+										Edit Asset
+										<span class="text-sm text-muted-foreground">{asset?.id || '-'}</span>
+									</Sheet.Title>
 								</Sheet.Header>
 								<div class="grid gap-4 py-4">
 									<EditAssetForm bind:this={formEditAsset} data={data.formEditAsset} {asset} />
@@ -76,6 +80,11 @@
 								</Sheet.Footer>
 							</Sheet.Content>
 						</Sheet.Root>
+						<form method="POST" action={`?/deleteAsset&id=${asset.id}`} use:enhance>
+							<Button type="submit" variant="destructive">
+								<Trash />
+							</Button>
+						</form>
 					</Table.Cell>
 				</Table.Row>
 			{/each}
