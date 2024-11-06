@@ -1,5 +1,5 @@
-import { sql } from 'drizzle-orm';
-import { sqliteTable, text, integer, blob } from 'drizzle-orm/sqlite-core';
+import { relations, sql } from 'drizzle-orm';
+import { sqliteTable, text, integer, blob, primaryKey } from 'drizzle-orm/sqlite-core';
 
 export const user = sqliteTable('user', {
 	id: text('id').primaryKey(),
@@ -20,12 +20,13 @@ export const instruction = sqliteTable('instruction', {
 	title: text('title').notNull(),
 	description: text('description'),
 	duration: integer('duration'),
-	previewFile: text('preview_file').references(() => asset.id),
+	previewFile: text('preview_file'),
 	createdAt: integer('created_at', { mode: 'timestamp_ms' }).default(sql`(CURRENT_TIMESTAMP)`),
 	updatedAt: integer('updated_at', { mode: 'timestamp_ms' }),
 	deletedAt: integer('deleted_at', { mode: 'timestamp_ms' }),
 	createdBy: text('created_by').references(() => user.id),
-	updatedBy: text('updated_by').references(() => user.id)
+	updatedBy: text('updated_by').references(() => user.id),
+	deletedBy: text('deleted_by').references(() => user.id)
 });
 
 export const step = sqliteTable('step', {
@@ -37,24 +38,58 @@ export const step = sqliteTable('step', {
 	title: text('title').notNull(),
 	description: text('description'),
 	stepNr: integer('step_nr').notNull(),
-	attachedFile: text('attached_file').references(() => asset.id),
+	attachedFile: text('attached_file'),
 	createdAt: integer('created_at', { mode: 'timestamp_ms' }).default(sql`(CURRENT_TIMESTAMP)`),
 	updatedAt: integer('updated_at', { mode: 'timestamp_ms' }),
 	deletedAt: integer('deleted_at', { mode: 'timestamp_ms' }),
 	createdBy: text('created_by').references(() => user.id),
-	updatedBy: text('updated_by').references(() => user.id)
+	updatedBy: text('updated_by').references(() => user.id),
+	deletedBy: text('deleted_by').references(() => user.id)
 });
 
 export const asset = sqliteTable('asset', {
 	id: text('id').primaryKey(),
 	name: text('name').notNull(),
-	assetFile: blob('asset_file'),
+	assetFile: text('asset_file'),
 	createdAt: integer('created_at', { mode: 'timestamp_ms' }).default(sql`(CURRENT_TIMESTAMP)`),
 	updatedAt: integer('updated_at', { mode: 'timestamp_ms' }),
 	deletedAt: integer('deleted_at', { mode: 'timestamp_ms' }),
 	createdBy: text('created_by').references(() => user.id),
-	updatedBy: text('updated_by').references(() => user.id)
+	updatedBy: text('updated_by').references(() => user.id),
+	deletedBy: text('deleted_by').references(() => user.id)
 });
+
+// Relations
+
+export const instructionRelations = relations(instruction, ({ many }) => ({
+	instructionToAsset: many(instructionToAsset)
+}));
+
+export const stepRelations = relations(step, ({ many }) => ({
+	instructionToAsset: many(instructionToAsset)
+}));
+
+export const instructionToAsset = sqliteTable(
+	'instruction_to_asset',
+	{
+		instructionId: text('instruction_id').references(() => instruction.id),
+		assetId: text('asset_id').references(() => asset.id)
+	},
+	(t) => ({
+		pk: primaryKey({ columns: [t.instructionId, t.assetId] })
+	})
+);
+
+export const instructionToStepRelations = relations(instructionToAsset, ({ one }) => ({
+	instruction: one(instruction, {
+		fields: [instructionToAsset.instructionId],
+		references: [instruction.id]
+	}),
+	asset: one(asset, {
+		fields: [instructionToAsset.assetId],
+		references: [asset.id]
+	})
+}));
 
 export type Session = typeof session.$inferSelect;
 export type User = typeof user.$inferSelect;

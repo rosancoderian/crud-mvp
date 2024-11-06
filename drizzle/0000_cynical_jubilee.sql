@@ -1,14 +1,16 @@
 CREATE TABLE `asset` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
-	`asset_file` blob,
+	`asset_file` text,
 	`created_at` integer DEFAULT (CURRENT_TIMESTAMP),
 	`updated_at` integer,
 	`deleted_at` integer,
 	`created_by` text,
 	`updated_by` text,
+	`deleted_by` text,
 	FOREIGN KEY (`created_by`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`updated_by`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`updated_by`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`deleted_by`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `instruction` (
@@ -22,9 +24,18 @@ CREATE TABLE `instruction` (
 	`deleted_at` integer,
 	`created_by` text,
 	`updated_by` text,
-	FOREIGN KEY (`preview_file`) REFERENCES `asset`(`id`) ON UPDATE no action ON DELETE no action,
+	`deleted_by` text,
 	FOREIGN KEY (`created_by`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`updated_by`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`updated_by`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`deleted_by`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE TABLE `instruction_to_asset` (
+	`instruction_id` text,
+	`asset_id` text,
+	PRIMARY KEY(`asset_id`, `instruction_id`),
+	FOREIGN KEY (`instruction_id`) REFERENCES `instruction`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`asset_id`) REFERENCES `asset`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `session` (
@@ -47,10 +58,11 @@ CREATE TABLE `step` (
 	`deleted_at` integer,
 	`created_by` text,
 	`updated_by` text,
+	`deleted_by` text,
 	FOREIGN KEY (`instruction_id`) REFERENCES `instruction`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`attached_file`) REFERENCES `asset`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`created_by`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`updated_by`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`updated_by`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`deleted_by`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `user` (
