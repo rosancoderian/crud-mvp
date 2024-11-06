@@ -61,12 +61,24 @@ export const asset = sqliteTable('asset', {
 
 // Relations
 
-export const instructionRelations = relations(instruction, ({ many }) => ({
-	instructionToAsset: many(instructionToAsset)
+export const instructionRelations = relations(instruction, ({ many, one }) => ({
+	instructionToAsset: many(instructionToAsset),
+	creator: one(user, { fields: [instruction.createdBy], references: [user.id] }),
+	updater: one(user, { fields: [instruction.updatedBy], references: [user.id] }),
+	deleter: one(user, { fields: [instruction.deletedBy], references: [user.id] })
 }));
 
-export const stepRelations = relations(step, ({ many }) => ({
-	instructionToAsset: many(instructionToAsset)
+export const stepRelations = relations(step, ({ many, one }) => ({
+	instructionToAsset: many(instructionToAsset),
+	creator: one(user, { fields: [step.createdBy], references: [user.id] }),
+	updater: one(user, { fields: [step.updatedBy], references: [user.id] }),
+	deleter: one(user, { fields: [step.deletedBy], references: [user.id] })
+}));
+
+export const assetRelations = relations(asset, ({ one }) => ({
+	creator: one(user, { fields: [asset.createdBy], references: [user.id] }),
+	updater: one(user, { fields: [asset.updatedBy], references: [user.id] }),
+	deleter: one(user, { fields: [asset.deletedBy], references: [user.id] })
 }));
 
 export const instructionToAsset = sqliteTable(

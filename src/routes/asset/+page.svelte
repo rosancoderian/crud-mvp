@@ -68,11 +68,11 @@
 									<Sheet.Title>Edit Asset</Sheet.Title>
 								</Sheet.Header>
 								<div class="grid gap-4 py-4">
-									<EditAssetForm data={data.formEditAsset} {asset} />
+									<EditAssetForm bind:this={formEditAsset} data={data.formEditAsset} {asset} />
 								</div>
 								<Sheet.Footer>
 									<Sheet.Close class={buttonVariants({ variant: 'ghost' })}>Cancel</Sheet.Close>
-									<Button onclick={() => formEditAsset.sumit()}>Save</Button>
+									<Button onclick={() => formEditAsset.submit()}>Save</Button>
 								</Sheet.Footer>
 							</Sheet.Content>
 						</Sheet.Root>
